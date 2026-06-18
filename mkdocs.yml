@@ -1,0 +1,51 @@
+site_name: GTS ESM Knowledge Base
+site_description: Team processes, tools, and personal reference docs
+site_author: GTS ESM Ops
+
+theme:
+  name: material
+  palette:
+    - scheme: default
+      primary: blue
+      accent: light blue
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    - scheme: slate
+      primary: blue
+      accent: light blue
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+  features:
+    - navigation.tabs
+    - navigation.sections
+    - navigation.expand
+    - navigation.top
+    - search.highlight
+    - search.suggest
+    - content.code.copy
+
+nav:
+  - Home: index.md
+  - Team:
+    - Processes: team/processes.md
+    - Tools & Scripts: team/tools.md
+    - Onboarding: team/onboarding.md
+  - Reports:
+    - How to Run Reports: reports/how-to-run.md
+    - Data Sources: reports/data-sources.md
+  - My Notes:
+    - notes/index.md
+
+plugins:
+  - search
+
+markdown_extensions:
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences
+  - pymdownx.tabbed:
+      alternate_style: true
+  - tables
+  - attr_list
