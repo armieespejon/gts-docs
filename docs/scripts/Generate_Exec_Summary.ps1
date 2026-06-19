@@ -87,7 +87,6 @@ if (Test-Path $stateFile) {
     $prevDate    = $state.ReportDate
     $prevAge1630 = $state.Age16_30
 }
-@{ ActiveCases = $active; ReportDate = $ReportDate; Age16_30 = 0 } | ConvertTo-Json | Out-File $stateFile -Encoding UTF8
 
 # Build active delta note
 if ($prevActive -ne $null -and $prevDate -ne $null) {
