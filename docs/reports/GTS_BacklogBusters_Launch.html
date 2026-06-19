@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>Backlog Busters — GTS ESM</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Segoe UI', Arial, sans-serif; background: #0d1117; color: #e6edf3; overflow: hidden; height: 100vh; width: 100vw; }
+
+    /* SLIDES */
+    .slide { display: none; width: 100vw; height: 100vh; position: absolute; top: 0; left: 0; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 40px; opacity: 0; transition: opacity 0.6s ease; }
+    .slide.active { display: flex; opacity: 1; }
+
+    /* NAV */
+    .nav { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%); display: flex; gap: 10px; z-index: 100; }
+    .nav-dot { width: 10px; height: 10px; border-radius: 50%; background: rgba(255,255,255,0.3); cursor: pointer; transition: background 0.3s; }
+    .nav-dot.active { background: #F0AB00; }
+    .nav-arrow { position: fixed; bottom: 20px; right: 32px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); border-radius: 8px; padding: 8px 20px; font-size: 13px; color: #fff; cursor: pointer; transition: background 0.2s; z-index: 100; }
+    .nav-arrow:hover { background: rgba(255,255,255,0.2); }
+    .slide-count { position: fixed; bottom: 24px; left: 32px; font-size: 12px; color: rgba(255,255,255,0.4); z-index: 100; }
+
+    /* ======= SLIDE 1 — REVEAL ======= */
+    .s1 { background: radial-gradient(ellipse at center, #1a1a3e 0%, #0d1117 70%); }
+    .s1 .pre-title { font-size: 14px; letter-spacing: 3px; text-transform: uppercase; color: #7dd3fc; margin-bottom: 16px; animation: fadeUp 0.8s ease 0.2s both; }
+    .s1 .main-title { font-size: 72px; font-weight: 900; line-height: 1; background: linear-gradient(135deg, #F0AB00, #ff6b35, #F0AB00); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; margin-bottom: 8px; animation: fadeUp 0.8s ease 0.4s both; }
+    .s1 .sub-title { font-size: 22px; color: rgba(255,255,255,0.7); margin-bottom: 32px; animation: fadeUp 0.8s ease 0.6s both; }
+    .s1 .gif-wrap { animation: fadeUp 0.8s ease 0.8s both; }
+    .s1 .gif-wrap img { width: 220px; border-radius: 16px; }
+    .s1 .tag { margin-top: 24px; background: rgba(240,171,0,0.15); border: 1px solid #F0AB00; border-radius: 20px; padding: 6px 20px; font-size: 13px; color: #F0AB00; animation: fadeUp 0.8s ease 1s both; }
+
+    /* ======= SLIDE 2 — THE CHALLENGE ======= */
+    .s2 { background: radial-gradient(ellipse at center, #1a0d0d 0%, #0d1117 70%); }
+    .s2 .section-tag { font-size: 12px; letter-spacing: 3px; text-transform: uppercase; color: #f85149; margin-bottom: 20px; }
+    .s2 .challenge-title { font-size: 48px; font-weight: 800; color: #fff; margin-bottom: 16px; }
+    .s2 .challenge-title span { color: #f85149; }
+    .s2 .challenge-body { font-size: 18px; color: rgba(255,255,255,0.7); max-width: 600px; line-height: 1.7; margin-bottom: 32px; }
+    .s2 .challenge-body strong { color: #fff; }
+    .s2 .stats { display: flex; gap: 24px; justify-content: center; margin-bottom: 32px; }
+    .s2 .stat-box { background: rgba(248,81,73,0.1); border: 1px solid rgba(248,81,73,0.3); border-radius: 12px; padding: 16px 28px; }
+    .s2 .stat-num { font-size: 36px; font-weight: 800; color: #f85149; }
+    .s2 .stat-label { font-size: 12px; color: rgba(255,255,255,0.5); margin-top: 4px; }
+    .s2 .gif-wrap img { width: 160px; border-radius: 12px; }
+
+    /* ======= SLIDE 3 — HOW TO WIN ======= */
+    .s3 { background: radial-gradient(ellipse at center, #0d1a0d 0%, #0d1117 70%); }
+    .s3 .section-tag { font-size: 12px; letter-spacing: 3px; text-transform: uppercase; color: #3fb950; margin-bottom: 20px; }
+    .s3 .win-title { font-size: 48px; font-weight: 800; color: #fff; margin-bottom: 40px; }
+    .s3 .rules { display: flex; flex-direction: column; gap: 16px; max-width: 640px; width: 100%; }
+    .s3 .rule { display: flex; align-items: center; gap: 20px; background: rgba(63,185,80,0.08); border: 1px solid rgba(63,185,80,0.2); border-radius: 14px; padding: 18px 24px; text-align: left; }
+    .s3 .rule-icon { font-size: 32px; flex-shrink: 0; }
+    .s3 .rule-text { font-size: 16px; color: rgba(255,255,255,0.85); line-height: 1.5; }
+    .s3 .rule-text strong { color: #3fb950; font-size: 17px; }
+    .s3 .gif-wrap { margin-top: 24px; }
+    .s3 .gif-wrap img { width: 140px; border-radius: 12px; }
+
+    /* ======= SLIDE 4 — THE PRIZE ======= */
+    .s4 { background: radial-gradient(ellipse at center, #1a1500 0%, #0d1117 70%); }
+    .s4 .section-tag { font-size: 12px; letter-spacing: 3px; text-transform: uppercase; color: #F0AB00; margin-bottom: 20px; }
+    .s4 .prize-title { font-size: 52px; font-weight: 900; color: #fff; margin-bottom: 8px; }
+    .s4 .prize-title span { color: #F0AB00; }
+    .s4 .prize-card { background: linear-gradient(135deg, rgba(240,171,0,0.15), rgba(240,171,0,0.05)); border: 2px solid #F0AB00; border-radius: 20px; padding: 28px 48px; margin: 24px 0; }
+    .s4 .prize-name { font-size: 28px; font-weight: 700; color: #F0AB00; margin-bottom: 8px; }
+    .s4 .prize-detail { font-size: 16px; color: rgba(255,255,255,0.7); line-height: 1.6; }
+    .s4 .prize-detail strong { color: #fff; }
+    .s4 .winners-row { display: flex; gap: 16px; justify-content: center; margin-top: 8px; }
+    .s4 .winner-chip { background: rgba(240,171,0,0.2); border: 1px solid #F0AB00; border-radius: 20px; padding: 6px 20px; font-size: 14px; color: #F0AB00; font-weight: 600; }
+    .s4 .gif-wrap img { width: 160px; border-radius: 12px; margin-top: 20px; }
+
+    /* ======= SLIDE 5 — LET'S GO ======= */
+    .s5 { background: radial-gradient(ellipse at center, #001a3a 0%, #0d1117 70%); }
+    .s5 .section-tag { font-size: 12px; letter-spacing: 3px; text-transform: uppercase; color: #7dd3fc; margin-bottom: 16px; }
+    .s5 .go-title { font-size: 52px; font-weight: 900; color: #fff; margin-bottom: 32px; }
+    .s5 .go-title span { color: #7dd3fc; }
+    .s5 .timeline { display: flex; gap: 0; justify-content: center; align-items: stretch; margin-bottom: 32px; position: relative; }
+    .s5 .tl-item { background: #161b22; border: 1px solid #30363d; border-radius: 14px; padding: 18px 20px; width: 160px; position: relative; z-index: 1; }
+    .s5 .tl-arrow { display: flex; align-items: center; color: rgba(255,255,255,0.3); font-size: 20px; padding: 0 6px; }
+    .s5 .tl-week { font-size: 11px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 4px; }
+    .s5 .tl-dates { font-size: 11px; color: #8b949e; margin-bottom: 12px; }
+    .s5 .tl-pct { font-size: 28px; font-weight: 800; }
+    .s5 .tl-label { font-size: 11px; color: #8b949e; margin-top: 2px; }
+    .s5 .tl-cases { font-size: 12px; font-weight: 600; margin-top: 8px; padding: 4px 8px; border-radius: 6px; }
+
+    .s5 .tl-item.w1 { border-color: #007DB8; }
+    .s5 .tl-item.w1 .tl-week { color: #38b6e8; }
+    .s5 .tl-item.w1 .tl-pct { color: #38b6e8; }
+    .s5 .tl-item.w1 .tl-cases { background: rgba(0,125,184,0.15); color: #38b6e8; }
+
+    .s5 .tl-item.w2 { border-color: #007DB8; }
+    .s5 .tl-item.w2 .tl-week { color: #38b6e8; }
+    .s5 .tl-item.w2 .tl-pct { color: #38b6e8; }
+    .s5 .tl-item.w2 .tl-cases { background: rgba(0,125,184,0.15); color: #38b6e8; }
+
+    .s5 .tl-item.w3 { border-color: #3fb950; }
+    .s5 .tl-item.w3 .tl-week { color: #3fb950; }
+    .s5 .tl-item.w3 .tl-pct { color: #3fb950; }
+    .s5 .tl-item.w3 .tl-cases { background: rgba(63,185,80,0.15); color: #3fb950; }
+
+    .s5 .tl-item.w4 { border-color: #F0AB00; }
+    .s5 .tl-item.w4 .tl-week { color: #F0AB00; }
+    .s5 .tl-item.w4 .tl-pct { color: #F0AB00; }
+    .s5 .tl-item.w4 .tl-cases { background: rgba(240,171,0,0.15); color: #F0AB00; }
+
+    .s5 .closing { font-size: 20px; color: rgba(255,255,255,0.8); max-width: 560px; line-height: 1.6; margin-bottom: 20px; }
+    .s5 .closing strong { color: #7dd3fc; }
+    .s5 .gif-wrap img { width: 140px; border-radius: 12px; }
+
+    /* ======= SLIDE 6 — SAMPLE COMPUTATION ======= */
+    .s6 { background: radial-gradient(ellipse at center, #0d0d1a 0%, #0d1117 70%); }
+    .s6 .section-tag { font-size: 12px; letter-spacing: 3px; text-transform: uppercase; color: #c4b5fd; margin-bottom: 12px; }
+    .s6 .comp-title { font-size: 38px; font-weight: 800; color: #fff; margin-bottom: 6px; }
+    .s6 .comp-sub { font-size: 14px; color: #8b949e; margin-bottom: 24px; }
+    .s6 .agents { display: flex; gap: 12px; justify-content: center; margin-bottom: 20px; align-items: flex-start; flex-wrap: wrap; }
+    .s6 .agent-box { background: #161b22; border: 1px solid #30363d; border-radius: 16px; padding: 16px; width: 190px; }
+    .s6 .agent-box.winner { border-color: #F0AB00; box-shadow: 0 0 24px rgba(240,171,0,0.2); }
+    .s6 .agent-emoji { font-size: 36px; margin-bottom: 8px; }
+    .s6 .agent-name { font-size: 15px; font-weight: 700; color: #fff; margin-bottom: 14px; }
+    .s6 .metric-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; padding: 6px 10px; border-radius: 8px; background: #0d1117; }
+    .s6 .metric-label { font-size: 11px; color: #8b949e; }
+    .s6 .metric-val { font-size: 15px; font-weight: 700; }
+    .s6 .rank-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; padding: 6px 10px; border-radius: 8px; }
+    .s6 .rank-label { font-size: 11px; color: #8b949e; }
+    .s6 .rank-val { font-size: 13px; font-weight: 700; }
+    .s6 .score-total { margin-top: 12px; padding: 10px; border-radius: 10px; text-align: center; }
+    .s6 .score-total .score-label { font-size: 11px; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 4px; }
+    .s6 .score-total .score-num { font-size: 32px; font-weight: 900; }
+    .s6 .vs-badge { font-size: 28px; font-weight: 900; color: rgba(255,255,255,0.2); align-self: center; padding-top: 40px; }
+    .s6 .winner-banner { background: linear-gradient(135deg, rgba(240,171,0,0.2), rgba(240,171,0,0.05)); border: 2px solid #F0AB00; border-radius: 14px; padding: 14px 32px; display: flex; align-items: center; gap: 16px; }
+    .s6 .winner-banner .wb-gif img { width: 100px; border-radius: 8px; }
+    .s6 .winner-banner .wb-text { text-align: left; }
+    .s6 .winner-banner .wb-label { font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: #F0AB00; }
+    .s6 .winner-banner .wb-name { font-size: 22px; font-weight: 800; color: #fff; }
+    .s6 .winner-banner .wb-reason { font-size: 12px; color: rgba(255,255,255,0.6); margin-top: 2px; }
+
+    /* ANIMATIONS */
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes pulse { 0%,100% { transform: scale(1); } 50% { transform: scale(1.05); } }
+    .pulse { animation: pulse 2s infinite; }
+  </style>
+</head>
+<body>
+
+<!-- ======= SLIDE 1 ======= -->
+<div class="slide s1 active" id="slide-1">
+  <div class="pre-title">GTS ESM PH Team &nbsp;&#8226;&nbsp; June 22 – July 18, 2026</div>
+  <div class="main-title">BACKLOG<br>BUSTERS</div>
+  <div class="sub-title">It's time to level up. &#127775;</div>
+  <div class="gif-wrap pulse">
+    <img src="https://media.giphy.com/media/l0MYt5jPR6QX5pnqM/giphy.gif" alt="hype"/>
+  </div>
+  <div class="tag">&#127881; A 4-Week Team Incentive Program</div>
+</div>
+
+<!-- ======= SLIDE 2 ======= -->
+<div class="slide s2" id="slide-2">
+  <div class="section-tag">&#128248; Why are we doing this?</div>
+  <div class="challenge-title">We have a <span>big queue.</span><br>Let's tackle it together.</div>
+  <div class="challenge-body">
+    Our volume has grown massively this year. Cases are piling up and some are aging. <strong>This program is our sprint to bring it under control</strong> — and reward the people who make it happen.
+  </div>
+  <div class="stats">
+    <div class="stat-box">
+      <div class="stat-num">1,619</div>
+      <div class="stat-label">Active Cases Today</div>
+    </div>
+    <div class="stat-box">
+      <div class="stat-num">358</div>
+      <div class="stat-label">Cases / Heavy Day</div>
+    </div>
+    <div class="stat-box">
+      <div class="stat-num">4 wks</div>
+      <div class="stat-label">To Make a Dent</div>
+    </div>
+  </div>
+  <div class="gif-wrap">
+    <img src="https://media.giphy.com/media/3o7TKtnuHOHHUjR38Y/giphy.gif" alt="fire" style="width:140px;border-radius:12px"/>
+  </div>
+</div>
+
+<!-- ======= SLIDE 3 ======= -->
+<div class="slide s3" id="slide-3">
+  <div class="section-tag">&#127381; How do you win?</div>
+  <div class="win-title">Simple. Just do this. &#128071;</div>
+  <div class="rules">
+    <div class="rule">
+      <div class="rule-icon">&#128293;</div>
+      <div class="rule-text"><strong>Close more than you receive.</strong> If cases coming in = 22, you close 23 or more — you're winning. Every case above your inflow counts.</div>
+    </div>
+    <div class="rule">
+      <div class="rule-icon">&#9203;</div>
+      <div class="rule-text"><strong>Keep your aging cases low.</strong> Work those older cases first. Cases sitting 30+ days hurt your score double — tackle them early in the week.</div>
+    </div>
+    <div class="rule">
+      <div class="rule-icon">&#127942;</div>
+      <div class="rule-text"><strong>Best combined score wins.</strong> Lowest closure rank + lowest aging rank = winner. Two people win every single week.</div>
+    </div>
+  </div>
+  <div class="gif-wrap">
+    <img src="https://media.giphy.com/media/26u4cqiYI30juCOGY/giphy.gif" alt="celebrate" style="width:130px;border-radius:12px"/>
+  </div>
+</div>
+
+<!-- ======= SLIDE 4 ======= -->
+<div class="slide s4" id="slide-4">
+  <div class="section-tag">&#127873; What do you get?</div>
+  <div class="prize-title">Win big. <span>Every week.</span></div>
+  <div class="prize-card pulse">
+    <div class="prize-name">&#127942; SAP Appreciate Monetary Award</div>
+    <div class="prize-detail">
+      <strong>2 winners every week</strong> for 4 weeks.<br>
+      That's <strong>8 chances</strong> to win across the program.<br>
+      Yes — the same person <strong>can win multiple weeks.</strong>
+    </div>
+  </div>
+  <div class="winners-row">
+    <div class="winner-chip">&#127775; Week 1 Winner</div>
+    <div class="winner-chip">&#127775; Week 2 Winner</div>
+    <div class="winner-chip">&#127775; Week 3 Winner</div>
+    <div class="winner-chip">&#127775; Week 4 Winner</div>
+  </div>
+  <div class="gif-wrap">
+    <img src="https://media.giphy.com/media/artj92V8o75VPL7AeQ/giphy.gif" alt="trophy" style="width:160px;border-radius:12px"/>
+  </div>
+</div>
+
+<!-- ======= SLIDE 5 ======= -->
+<div class="slide s5" id="slide-5">
+  <div class="section-tag">&#128197; The Plan</div>
+  <div class="go-title">4 Weeks. <span>Let's go!</span> &#128640;</div>
+  <div class="timeline">
+    <div class="tl-item w1">
+      <div class="tl-week">Week 1</div>
+      <div class="tl-dates">Jun 22–27</div>
+      <div class="tl-pct">&#127381;</div>
+      <div class="tl-label">Kick off!</div>
+      <div class="tl-cases">Results: Jun 29 (Tue)</div>
+    </div>
+    <div class="tl-arrow">&#10132;</div>
+    <div class="tl-item w2">
+      <div class="tl-week">Week 2</div>
+      <div class="tl-dates">Jun 29–Jul 4</div>
+      <div class="tl-pct">&#128293;</div>
+      <div class="tl-label">Building momentum</div>
+      <div class="tl-cases">Results: Jul 6 (Tue)</div>
+    </div>
+    <div class="tl-arrow">&#10132;</div>
+    <div class="tl-item w3">
+      <div class="tl-week">Week 3</div>
+      <div class="tl-dates">Jul 7–11</div>
+      <div class="tl-pct">&#9889;</div>
+      <div class="tl-label">Pushing hard</div>
+      <div class="tl-cases">Results: Jul 13 (Tue)</div>
+    </div>
+    <div class="tl-arrow">&#10132;</div>
+    <div class="tl-item w4">
+      <div class="tl-week">Week 4 &#127942;</div>
+      <div class="tl-dates">Jul 14–18</div>
+      <div class="tl-pct">&#127775;</div>
+      <div class="tl-label">Grand Finale!</div>
+      <div class="tl-cases">Results: Jul 21 (Tue)</div>
+    </div>
+  </div>
+  <div class="closing">
+    Results announced every <strong>Tuesday morning</strong>. Winners recognized in front of the team. <strong>You've got this — let's bust that backlog! &#128170;</strong>
+  </div>
+  <div class="gif-wrap">
+    <img src="https://media.giphy.com/media/l0HlBO7eyXzSZkJri/giphy.gif" alt="lets go" style="width:150px;border-radius:12px"/>
+  </div>
+</div>
+
+<!-- ======= SLIDE 6 ======= -->
+<div class="slide s6" id="slide-6">
+  <div class="section-tag">&#129514; Let's do the math — for fun!</div>
+  <div class="comp-title">Who wins this week? &#128064;</div>
+  <div class="comp-sub">Same inflow. Different results. Here's how the scoring works.</div>
+
+  <div class="agents">
+
+    <!-- AGENT 1 -->
+    <div class="agent-box winner">
+      <div class="agent-emoji">&#129395;</div>
+      <div class="agent-name">Agent Superstar</div>
+      <div class="metric-row">
+        <span class="metric-label">Inflow</span>
+        <span class="metric-val" style="color:#7dd3fc">22</span>
+      </div>
+      <div class="metric-row">
+        <span class="metric-label">Closures</span>
+        <span class="metric-val" style="color:#3fb950">26</span>
+      </div>
+      <div class="metric-row">
+        <span class="metric-label">Closure Rate</span>
+        <span class="metric-val" style="color:#3fb950">118% &#128293;</span>
+      </div>
+      <div class="metric-row">
+        <span class="metric-label">Aging (30+)</span>
+        <span class="metric-val" style="color:#3fb950">0</span>
+      </div>
+      <div class="rank-row" style="background:rgba(63,185,80,0.1)">
+        <span class="rank-label">Closure Rank</span>
+        <span class="rank-val" style="color:#3fb950">#1 &#127942;</span>
+      </div>
+      <div class="rank-row" style="background:rgba(63,185,80,0.1)">
+        <span class="rank-label">Aging Rank</span>
+        <span class="rank-val" style="color:#3fb950">#1 &#127942;</span>
+      </div>
+      <div class="score-total" style="background:rgba(240,171,0,0.15);border:1px solid #F0AB00">
+        <div class="score-label" style="color:#F0AB00">Score</div>
+        <div class="score-num" style="color:#F0AB00">2 &#128081;</div>
+      </div>
+    </div>
+
+    <!-- AGENT 2 -->
+    <div class="agent-box winner">
+      <div class="agent-emoji">&#128293;</div>
+      <div class="agent-name">Agent On Fire</div>
+      <div class="metric-row">
+        <span class="metric-label">Inflow</span>
+        <span class="metric-val" style="color:#7dd3fc">22</span>
+      </div>
+      <div class="metric-row">
+        <span class="metric-label">Closures</span>
+        <span class="metric-val" style="color:#3fb950">24</span>
+      </div>
+      <div class="metric-row">
+        <span class="metric-label">Closure Rate</span>
+        <span class="metric-val" style="color:#3fb950">109%</span>
+      </div>
+      <div class="metric-row">
+        <span class="metric-label">Aging (30+)</span>
+        <span class="metric-val" style="color:#3fb950">1</span>
+      </div>
+      <div class="rank-row" style="background:rgba(63,185,80,0.1)">
+        <span class="rank-label">Closure Rank</span>
+        <span class="rank-val" style="color:#3fb950">#2 &#127942;</span>
+      </div>
+      <div class="rank-row" style="background:rgba(63,185,80,0.1)">
+        <span class="rank-label">Aging Rank</span>
+        <span class="rank-val" style="color:#3fb950">#2 &#127942;</span>
+      </div>
+      <div class="score-total" style="background:rgba(240,171,0,0.15);border:1px solid #F0AB00">
+        <div class="score-label" style="color:#F0AB00">Score</div>
+        <div class="score-num" style="color:#F0AB00">4 &#128081;</div>
+      </div>
+    </div>
+
+    <!-- AGENT 3 -->
+    <div class="agent-box">
+      <div class="agent-emoji">&#128170;</div>
+      <div class="agent-name">Agent Comeback Kid</div>
+      <div class="metric-row">
+        <span class="metric-label">Inflow</span>
+        <span class="metric-val" style="color:#7dd3fc">22</span>
+      </div>
+      <div class="metric-row">
+        <span class="metric-label">Closures</span>
+        <span class="metric-val" style="color:#F0AB00">20</span>
+      </div>
+      <div class="metric-row">
+        <span class="metric-label">Closure Rate</span>
+        <span class="metric-val" style="color:#F0AB00">91%</span>
+      </div>
+      <div class="metric-row">
+        <span class="metric-label">Aging (30+)</span>
+        <span class="metric-val" style="color:#f85149">3 &#128308;</span>
+      </div>
+      <div class="rank-row" style="background:rgba(240,171,0,0.08)">
+        <span class="rank-label">Closure Rank</span>
+        <span class="rank-val" style="color:#F0AB00">#3</span>
+      </div>
+      <div class="rank-row" style="background:rgba(248,81,73,0.08)">
+        <span class="rank-label">Aging Rank</span>
+        <span class="rank-val" style="color:#f85149">#4</span>
+      </div>
+      <div class="score-total" style="background:#161b22;border:1px solid #30363d">
+        <div class="score-label" style="color:#8b949e">Score</div>
+        <div class="score-num" style="color:#8b949e">7</div>
+      </div>
+    </div>
+
+    <!-- AGENT 4 -->
+    <div class="agent-box">
+      <div class="agent-emoji">&#128547;</div>
+      <div class="agent-name">Agent Almost There</div>
+      <div class="metric-row">
+        <span class="metric-label">Inflow</span>
+        <span class="metric-val" style="color:#7dd3fc">22</span>
+      </div>
+      <div class="metric-row">
+        <span class="metric-label">Closures</span>
+        <span class="metric-val" style="color:#f85149">18</span>
+      </div>
+      <div class="metric-row">
+        <span class="metric-label">Closure Rate</span>
+        <span class="metric-val" style="color:#f85149">82%</span>
+      </div>
+      <div class="metric-row">
+        <span class="metric-label">Aging (30+)</span>
+        <span class="metric-val" style="color:#F0AB00">2</span>
+      </div>
+      <div class="rank-row" style="background:rgba(248,81,73,0.08)">
+        <span class="rank-label">Closure Rank</span>
+        <span class="rank-val" style="color:#f85149">#4</span>
+      </div>
+      <div class="rank-row" style="background:rgba(240,171,0,0.08)">
+        <span class="rank-label">Aging Rank</span>
+        <span class="rank-val" style="color:#F0AB00">#3</span>
+      </div>
+      <div class="score-total" style="background:#161b22;border:1px solid #30363d">
+        <div class="score-label" style="color:#8b949e">Score</div>
+        <div class="score-num" style="color:#8b949e">7</div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- WINNER BANNER -->
+  <div class="winner-banner pulse">
+    <div class="wb-gif"><img src="https://media.giphy.com/media/g9582DNuQppxC/giphy.gif" alt="winner"/></div>
+    <div class="wb-text">
+      <div class="wb-label">&#127942; This Week's Winners</div>
+      <div class="wb-name">Superstar & On Fire! &#129395;&#128293;</div>
+      <div class="wb-reason">Scores of 2 and 4 — closed more than they received AND kept aging low. That's the winning formula!</div>
+    </div>
+  </div>
+</div>
+
+<!-- NAV -->
+<div class="slide-count" id="slideCount">1 / 5</div>
+<div class="nav" id="navDots">
+  <div class="nav-dot active" onclick="goTo(0)"></div>
+  <div class="nav-dot" onclick="goTo(1)"></div>
+  <div class="nav-dot" onclick="goTo(2)"></div>
+  <div class="nav-dot" onclick="goTo(3)"></div>
+  <div class="nav-dot" onclick="goTo(4)"></div>
+  <div class="nav-dot" onclick="goTo(5)"></div>
+</div>
+<div class="nav-arrow" id="navBtn" onclick="nextSlide()">Next &#10132;</div>
+
+<script>
+  var current = 0;
+  var total = 6;
+
+  function goTo(idx) {
+    document.querySelectorAll('.slide').forEach(function(s){ s.classList.remove('active'); });
+    document.querySelectorAll('.nav-dot').forEach(function(d){ d.classList.remove('active'); });
+    current = idx;
+    document.getElementById('slide-' + (current+1)).classList.add('active');
+    document.querySelectorAll('.nav-dot')[current].classList.add('active');
+    document.getElementById('slideCount').textContent = (current+1) + ' / ' + total;
+    document.getElementById('navBtn').textContent = current === total-1 ? '&#9654; Restart' : 'Next →';
+  }
+
+  function nextSlide() {
+    if (current < total - 1) { goTo(current + 1); }
+    else { goTo(0); }
+  }
+
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'ArrowRight' || e.key === ' ') { nextSlide(); }
+    if (e.key === 'ArrowLeft' && current > 0) { goTo(current - 1); }
+  });
+</script>
+
+</body>
+</html>
