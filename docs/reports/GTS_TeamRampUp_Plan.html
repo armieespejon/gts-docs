@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>GTS ESM — Team Ramp-Up Plan</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Segoe UI', Arial, sans-serif; background: #0d1117; color: #e6edf3; min-height: 100vh; }
+
+    /* HEADER */
+    .header { background: linear-gradient(135deg, #007DB8 0%, #005a8a 100%); padding: 32px 40px 28px; }
+    .header h1 { font-size: 28px; font-weight: 700; color: #fff; margin-bottom: 6px; }
+    .header p { font-size: 14px; color: rgba(255,255,255,0.8); }
+    .header .badge { display: inline-block; background: rgba(255,255,255,0.2); border-radius: 20px; padding: 4px 14px; font-size: 12px; color: #fff; margin-top: 10px; }
+
+    .content { max-width: 960px; margin: 0 auto; padding: 32px 24px; }
+
+    /* SECTION TITLE */
+    .section-title { font-size: 11px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: #7dd3fc; margin-bottom: 16px; }
+
+    /* MESSAGE CARD */
+    .message-card { background: #161b22; border: 1px solid #30363d; border-left: 4px solid #007DB8; border-radius: 8px; padding: 20px 24px; margin-bottom: 32px; }
+    .message-card p { font-size: 15px; line-height: 1.7; color: #c9d1d9; }
+    .message-card strong { color: #7dd3fc; }
+
+    /* WEEK CARDS */
+    .weeks { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 40px; }
+    .week-card { background: #161b22; border: 1px solid #30363d; border-radius: 12px; overflow: hidden; transition: transform 0.2s; }
+    .week-card:hover { transform: translateY(-3px); }
+    .week-card .wk-header { padding: 14px 16px 10px; }
+    .week-card .wk-label { font-size: 11px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 4px; }
+    .week-card .wk-dates { font-size: 12px; color: #8b949e; }
+    .week-card .wk-body { padding: 12px 16px 16px; }
+
+    /* RAMP BAR */
+    .ramp-bar-wrap { margin: 10px 0 6px; }
+    .ramp-bar-bg { background: #21262d; border-radius: 20px; height: 10px; overflow: hidden; }
+    .ramp-bar-fill { height: 100%; border-radius: 20px; transition: width 1s ease; }
+    .ramp-pct { font-size: 20px; font-weight: 700; margin-top: 8px; }
+    .ramp-sub { font-size: 11px; color: #8b949e; margin-top: 2px; }
+
+    /* TARGET NUMBER */
+    .target-block { background: #0d1117; border-radius: 8px; padding: 12px; margin-top: 12px; text-align: center; }
+    .target-label { font-size: 10px; letter-spacing: 1px; text-transform: uppercase; color: #8b949e; margin-bottom: 4px; }
+    .target-num { font-size: 32px; font-weight: 800; line-height: 1; }
+    .target-sub { font-size: 11px; color: #8b949e; margin-top: 4px; }
+
+    /* CAPACITY STRIP */
+    .capacity-section { margin-bottom: 40px; }
+    .capacity-bars { display: flex; flex-direction: column; gap: 12px; }
+    .cap-row { display: flex; align-items: center; gap: 16px; }
+    .cap-label { width: 160px; font-size: 12px; color: #8b949e; flex-shrink: 0; }
+    .cap-bar-wrap { flex: 1; }
+    .cap-bar-bg { background: #21262d; border-radius: 20px; height: 24px; position: relative; overflow: visible; }
+    .cap-bar-fill { height: 100%; border-radius: 20px; display: flex; align-items: center; justify-content: flex-end; padding-right: 10px; font-size: 11px; font-weight: 700; color: #fff; transition: width 1s ease; position: relative; }
+    .cap-inflow-line { position: absolute; top: -4px; bottom: -4px; width: 3px; background: #f85149; border-radius: 2px; z-index: 2; }
+    .cap-inflow-label { position: absolute; top: -20px; font-size: 10px; color: #f85149; font-weight: 700; transform: translateX(-50%); white-space: nowrap; }
+    .cap-val { width: 80px; font-size: 13px; font-weight: 700; text-align: right; flex-shrink: 0; }
+
+    /* AGENT SECTION */
+    .agent-section { margin-bottom: 40px; }
+    .agent-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    .agent-card { background: #161b22; border: 1px solid #30363d; border-radius: 12px; padding: 20px 24px; }
+    .agent-card .ac-title { font-size: 13px; font-weight: 700; color: #fff; margin-bottom: 4px; }
+    .agent-card .ac-sub { font-size: 12px; color: #8b949e; margin-bottom: 16px; }
+    .agent-card .ac-num { font-size: 48px; font-weight: 800; line-height: 1; }
+    .agent-card .ac-label { font-size: 12px; color: #8b949e; margin-top: 4px; }
+    .agent-card .ac-note { font-size: 12px; color: #c9d1d9; margin-top: 12px; line-height: 1.6; border-top: 1px solid #30363d; padding-top: 12px; }
+
+    /* COLORS */
+    .c-blue   { color: #7dd3fc; }
+    .c-green  { color: #3fb950; }
+    .c-gold   { color: #F0AB00; }
+    .c-purple { color: #c4b5fd; }
+
+    .bar-w1 { background: linear-gradient(90deg, #007DB8, #38b6e8); width: 50%; }
+    .bar-w2 { background: linear-gradient(90deg, #007DB8, #38b6e8); width: 65%; }
+    .bar-w3 { background: linear-gradient(90deg, #3fb950, #22c55e); width: 80%; }
+    .bar-w4 { background: linear-gradient(90deg, #F0AB00, #fbbf24); width: 100%; }
+
+    .wk1 .wk-label { color: #38b6e8; }
+    .wk2 .wk-label { color: #38b6e8; }
+    .wk3 .wk-label { color: #3fb950; }
+    .wk4 .wk-label { color: #F0AB00; }
+
+    .wk1 .ramp-pct { color: #38b6e8; }
+    .wk2 .ramp-pct { color: #38b6e8; }
+    .wk3 .ramp-pct { color: #3fb950; }
+    .wk4 .ramp-pct { color: #F0AB00; }
+
+    .wk1 .target-num { color: #38b6e8; }
+    .wk2 .target-num { color: #38b6e8; }
+    .wk3 .target-num { color: #3fb950; }
+    .wk4 .target-num { color: #F0AB00; }
+
+    /* FOOTER */
+    .footer { text-align: center; padding: 24px; font-size: 11px; color: #484f58; border-top: 1px solid #21262d; }
+
+    /* EMOJI ROW */
+    .emoji-row { display: flex; justify-content: center; gap: 8px; margin-bottom: 32px; }
+    .emoji-chip { background: #161b22; border: 1px solid #30363d; border-radius: 20px; padding: 6px 16px; font-size: 13px; color: #c9d1d9; }
+  </style>
+</head>
+<body>
+
+<div class="header">
+  <h1>&#128640; GTS ESM — Team Ramp-Up Plan</h1>
+  <p>June 22 – July 18, 2026 &nbsp;|&nbsp; 4-Week Sprint &nbsp;|&nbsp; PH Team</p>
+  <div class="badge">&#128200; Based on Apr–Jun historical data (P95 scenario)</div>
+</div>
+
+<div class="content">
+
+  <!-- MESSAGE -->
+  <div class="message-card">
+    <p>Volume is high — but <strong>we have the capacity to handle it</strong>. This plan sets clear expectations for every team member over the next 4 weeks. New agents will ramp up gradually so nobody gets overwhelmed. <strong>By Week 4, we're running at full strength.</strong> &#128170;</p>
+  </div>
+
+  <!-- WEEK CARDS -->
+  <div class="section-title">&#128197; Weekly Ramp-Up</div>
+  <div class="weeks">
+
+    <div class="week-card wk1">
+      <div class="wk-header">
+        <div class="wk-label">Week 1</div>
+        <div class="wk-dates">Jun 22 – 27</div>
+      </div>
+      <div class="wk-body">
+        <div class="ramp-bar-wrap">
+          <div class="ramp-bar-bg"><div class="ramp-bar-fill bar-w1"></div></div>
+        </div>
+        <div class="ramp-pct">50%</div>
+        <div class="ramp-sub">New agent capacity</div>
+        <div class="target-block">
+          <div class="target-label">New agents — cases/day</div>
+          <div class="target-num">13</div>
+          <div class="target-sub">Close at least 12</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="week-card wk2">
+      <div class="wk-header">
+        <div class="wk-label">Week 2</div>
+        <div class="wk-dates">Jun 29 – Jul 4</div>
+      </div>
+      <div class="wk-body">
+        <div class="ramp-bar-wrap">
+          <div class="ramp-bar-bg"><div class="ramp-bar-fill bar-w2"></div></div>
+        </div>
+        <div class="ramp-pct">65%</div>
+        <div class="ramp-sub">New agent capacity</div>
+        <div class="target-block">
+          <div class="target-label">New agents — cases/day</div>
+          <div class="target-num">17</div>
+          <div class="target-sub">Close at least 15</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="week-card wk3">
+      <div class="wk-header">
+        <div class="wk-label">Week 3</div>
+        <div class="wk-dates">Jul 7 – 11</div>
+      </div>
+      <div class="wk-body">
+        <div class="ramp-bar-wrap">
+          <div class="ramp-bar-bg"><div class="ramp-bar-fill bar-w3"></div></div>
+        </div>
+        <div class="ramp-pct">80%</div>
+        <div class="ramp-sub">New agent capacity</div>
+        <div class="target-block">
+          <div class="target-label">New agents — cases/day</div>
+          <div class="target-num">21</div>
+          <div class="target-sub">Close at least 19</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="week-card wk4">
+      <div class="wk-header">
+        <div class="wk-label">Week 4 &#127942;</div>
+        <div class="wk-dates">Jul 14 – 18</div>
+      </div>
+      <div class="wk-body">
+        <div class="ramp-bar-wrap">
+          <div class="ramp-bar-bg"><div class="ramp-bar-fill bar-w4"></div></div>
+        </div>
+        <div class="ramp-pct">100%</div>
+        <div class="ramp-sub">Full capacity!</div>
+        <div class="target-block">
+          <div class="target-label">New agents — cases/day</div>
+          <div class="target-num">26</div>
+          <div class="target-sub">Close at least 23</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- CAPACITY -->
+  <div class="capacity-section">
+    <div class="section-title">&#9889; Team Capacity vs Expected Inflow</div>
+    <div style="font-size:12px;color:#8b949e;margin-bottom:16px">The red line shows P95 inflow (358 cases/day — a very heavy day). Green bars = we can handle it.</div>
+    <div class="capacity-bars">
+
+      <div class="cap-row">
+        <div class="cap-label" style="color:#38b6e8">Week 1 &nbsp;<span style="font-size:10px">(407 capacity)</span></div>
+        <div class="cap-bar-wrap">
+          <div class="cap-bar-bg">
+            <div class="cap-bar-fill" style="width:88%;background:linear-gradient(90deg,#007DB8,#38b6e8)">407</div>
+            <div class="cap-inflow-line" style="left:77.5%">
+              <div class="cap-inflow-label">P95: 358</div>
+            </div>
+          </div>
+        </div>
+        <div class="cap-val" style="color:#3fb950">+49 &#10003;</div>
+      </div>
+
+      <div class="cap-row">
+        <div class="cap-label" style="color:#38b6e8">Week 2 &nbsp;<span style="font-size:10px">(424 capacity)</span></div>
+        <div class="cap-bar-wrap">
+          <div class="cap-bar-bg">
+            <div class="cap-bar-fill" style="width:92%;background:linear-gradient(90deg,#007DB8,#38b6e8)">424</div>
+            <div class="cap-inflow-line" style="left:77.5%">
+              <div class="cap-inflow-label">P95: 358</div>
+            </div>
+          </div>
+        </div>
+        <div class="cap-val" style="color:#3fb950">+66 &#10003;</div>
+      </div>
+
+      <div class="cap-row">
+        <div class="cap-label" style="color:#3fb950">Week 3 &nbsp;<span style="font-size:10px">(440 capacity)</span></div>
+        <div class="cap-bar-wrap">
+          <div class="cap-bar-bg">
+            <div class="cap-bar-fill" style="width:95%;background:linear-gradient(90deg,#3fb950,#22c55e)">440</div>
+            <div class="cap-inflow-line" style="left:77.5%">
+              <div class="cap-inflow-label">P95: 358</div>
+            </div>
+          </div>
+        </div>
+        <div class="cap-val" style="color:#3fb950">+82 &#10003;</div>
+      </div>
+
+      <div class="cap-row">
+        <div class="cap-label" style="color:#F0AB00">Week 4 &nbsp;<span style="font-size:10px">(462 capacity)</span></div>
+        <div class="cap-bar-wrap">
+          <div class="cap-bar-bg">
+            <div class="cap-bar-fill" style="width:100%;background:linear-gradient(90deg,#F0AB00,#fbbf24)">462</div>
+            <div class="cap-inflow-line" style="left:77.5%">
+              <div class="cap-inflow-label">P95: 358</div>
+            </div>
+          </div>
+        </div>
+        <div class="cap-val" style="color:#F0AB00">+104 &#10003;</div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- AGENT CARDS -->
+  <div class="agent-section">
+    <div class="section-title">&#128101; What This Means For You</div>
+    <div class="agent-cards">
+
+      <div class="agent-card" style="border-left:4px solid #007DB8">
+        <div class="ac-title">&#9989; Existing Team (16 agents)</div>
+        <div class="ac-sub">Same expectation throughout all 4 weeks</div>
+        <div class="ac-num" style="color:#7dd3fc">22 – 26</div>
+        <div class="ac-label">cases per day (full team / 3 on leave)</div>
+        <div class="ac-note">
+          On a normal day with everyone in, expect around <strong style="color:#7dd3fc">22 cases</strong>. On days when 3 teammates are on leave, that can go up to <strong style="color:#f85149">26 cases</strong> — so pace yourself and plan ahead. Aim to close <strong style="color:#3fb950">at least 90%</strong> of what you receive each day. You're the backbone of the team this month. &#128170;
+        </div>
+      </div>
+
+      <div class="agent-card" style="border-left:4px solid #F0AB00">
+        <div class="ac-title">&#127381; New Agents (5 agents)</div>
+        <div class="ac-sub">Gradually increasing over 4 weeks</div>
+        <div class="ac-num" style="color:#F0AB00">13 &#8594; 26</div>
+        <div class="ac-label">cases per day (Week 1 → Week 4)</div>
+        <div class="ac-note">
+          You'll start at a comfortable pace and build up each week. Focus on <strong style="color:#F0AB00">quality and speed</strong> — not just volume. By Week 4 you'll be handling the same load as the rest of the team. You've got this! &#127775;
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- EMOJI SUMMARY -->
+  <div class="section-title">&#128161; Key Takeaways</div>
+  <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:40px">
+    <div style="background:#161b22;border:1px solid #30363d;border-radius:8px;padding:14px 20px;font-size:13px;color:#c9d1d9;display:flex;align-items:center;gap:12px">
+      <span style="font-size:20px">&#128200;</span>
+      <span>On a typical heavy day, the team receives around <strong style="color:#7dd3fc">358 cases</strong>. With all 21 agents active, our capacity is <strong style="color:#3fb950">407–462 cases</strong> — we're covered.</span>
+    </div>
+    <div style="background:#161b22;border:1px solid #30363d;border-radius:8px;padding:14px 20px;font-size:13px;color:#c9d1d9;display:flex;align-items:center;gap:12px">
+      <span style="font-size:20px">&#127919;</span>
+      <span>Your <strong style="color:#7dd3fc">baseline is 22 cases per day</strong> — but this is not your ceiling. On days when teammates are on leave, expect up to <strong style="color:#f85149">26 cases</strong>. Plan your day accordingly and always aim to close at least 90% of what you receive.</span>
+    </div>
+    <div style="background:#161b22;border:1px solid #30363d;border-radius:8px;padding:14px 20px;font-size:13px;color:#c9d1d9;display:flex;align-items:center;gap:12px">
+      <span style="font-size:20px">&#9203;</span>
+      <span>Peak inflow hits between <strong style="color:#F0AB00">4pm–7pm Manila time</strong> — that's when European business hours overlap. Expect your busiest stretch then.</span>
+    </div>
+    <div style="background:#161b22;border:1px solid #30363d;border-radius:8px;padding:14px 20px;font-size:13px;color:#c9d1d9;display:flex;align-items:center;gap:12px">
+      <span style="font-size:20px">&#128640;</span>
+      <span>By <strong style="color:#F0AB00">Week 4 (July 14)</strong>, all 21 agents are at full capacity and the team has a comfortable <strong style="color:#3fb950">+104 case surplus</strong> even on heavy days.</span>
+    </div>
+  </div>
+
+</div>
+
+<div class="footer">
+  GTS ESM Operations &mdash; Inflow Projection based on Apr 1–Jun 19, 2026 (excl. Jun 1–7 ACN Sprint) &mdash; P95 + 30% buffer scenario
+</div>
+
+</body>
+</html>
