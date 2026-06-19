@@ -78,14 +78,16 @@ $closed    = $ytdTotal - $active
 
 # Load previous active count from state file, then save today's
 $stateFile = "$OutputDir\exec_state.json"
-$prevActive = $null
-$prevDate   = $null
+$prevActive  = $null
+$prevDate    = $null
+$prevAge1630 = $null
 if (Test-Path $stateFile) {
     $state = Get-Content $stateFile | ConvertFrom-Json
-    $prevActive = $state.ActiveCases
-    $prevDate   = $state.ReportDate
+    $prevActive  = $state.ActiveCases
+    $prevDate    = $state.ReportDate
+    $prevAge1630 = $state.Age16_30
 }
-@{ ActiveCases = $active; ReportDate = $ReportDate } | ConvertTo-Json | Out-File $stateFile -Encoding UTF8
+@{ ActiveCases = $active; ReportDate = $ReportDate; Age16_30 = 0 } | ConvertTo-Json | Out-File $stateFile -Encoding UTF8
 
 # Build active delta note
 if ($prevActive -ne $null -and $prevDate -ne $null) {
@@ -152,6 +154,23 @@ $age30p   = ($activeCases | Where-Object { ($today - [datetime]::Parse($_.CREATE
 $age0pct  = [math]::Round($age0_15  / $active * 100, 1)
 $age16pct = [math]::Round($age16_30 / $active * 100, 1)
 $age30pct = [math]::Round($age30p   / $active * 100, 1)
+
+# Save Age16_30 to state file now that we have it
+@{ ActiveCases = $active; ReportDate = $ReportDate; Age16_30 = $age16_30 } | ConvertTo-Json | Out-File $stateFile -Encoding UTF8
+
+# Build 16-30 day delta note
+if ($prevAge1630 -ne $null -and $prevDate -ne $null) {
+    $age16Diff     = $age16_30 - $prevAge1630
+    $age16DiffFmt  = if ($age16Diff -gt 0) { "+$age16Diff" } elseif ($age16Diff -lt 0) { "$age16Diff" } else { "no change" }
+    $age16DiffNote = "$prevAge1630 as of $prevDate"
+    $age16DiffClass = if ($age16Diff -gt 0) { 'bad' } elseif ($age16Diff -lt 0) { 'good' } else { 'na' }
+    $age16Arrow     = if ($age16Diff -gt 0) { 'up' } elseif ($age16Diff -lt 0) { 'down' } else { 'neutral' }
+} else {
+    $age16DiffFmt   = 'No prior data'
+    $age16DiffNote  = 'First run'
+    $age16DiffClass = 'na'
+    $age16Arrow     = 'neutral'
+}
 
 # Top 5 courses (base code, strip version suffix)
 $top5 = $cases | Where-Object { $_.EXT_COURSECODE -notin @('','None','N/A') } | ForEach-Object {
@@ -606,6 +625,7 @@ $html = @"
           <div class="aging-label">16 - 30d</div>
           <div class="aging-track"><div class="aging-fill" style="width:$($age16pct)%;background:#F0AB00;"><span>$age16pct%</span></div></div>
           <div class="aging-count">$($age16_30.ToString('N0'))</div>
+          <div style="margin-left:8px;font-size:11px;"><span class="kpi-delta $age16DiffClass"><span class="arrow $age16Arrow"></span> $age16DiffFmt</span> <span style="color:#4d606e;font-size:10px;">$age16DiffNote</span></div>
         </div>
         <div class="aging-row">
           <div class="aging-label">&gt; 30d</div>
