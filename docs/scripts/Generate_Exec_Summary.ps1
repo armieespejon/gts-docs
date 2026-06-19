@@ -432,6 +432,7 @@ $html = @"
     .kpi-sub { font-size: 11px; color: #4d606e; }
     .kpi-delta { display: flex; align-items: center; gap: 5px; font-size: 12px; font-weight: 700; padding: 3px 8px; border-radius: 20px; }
     .kpi-delta.up   { background: #0d2818; color: #3fb950; } .kpi-delta.down { background: #2d0f0f; color: #f85149; } .kpi-delta.na { background: #1c2128; color: #4d606e; }
+    .kpi-delta.good { background: #0d2818; color: #3fb950; } .kpi-delta.bad  { background: #2d0f0f; color: #f85149; }
     .arrow { display: inline-block; width: 0; height: 0; flex-shrink: 0; }
     .arrow.up    { border-left: 5px solid transparent; border-right: 5px solid transparent; border-bottom: 8px solid #3fb950; }
     .arrow.down  { border-left: 5px solid transparent; border-right: 5px solid transparent; border-top: 8px solid #f85149; }
