@@ -35,6 +35,9 @@ nav:
   - Reports:
     - How to Run Reports: reports/how-to-run.md
     - Data Sources: reports/data-sources.md
+    - Report Gallery: reports/gallery.md
+  - Scripts:
+    - All Scripts: scripts/index.md
   - My Notes:
     - notes/index.md
 
