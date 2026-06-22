@@ -17,9 +17,10 @@ All GTS ESM HTML reports. Click to download and open in your browser.
 
 | Report | Description | Download |
 |---|---|---|
-| Team Ramp-Up Plan | 4-week capacity plan for new agents | [Download](https://github.com/armieespejon/gts-docs/raw/main/docs/reports/GTS_TeamRampUp_Plan.html) |
+| Team Ramp-Up Plan | 4-week capacity plan + weekend coverage model | [Download](https://github.com/armieespejon/gts-docs/raw/main/docs/reports/GTS_TeamRampUp_Plan.html) |
 | Backlog Busters Launch | 6-slide team meeting infographic | [Download](https://github.com/armieespejon/gts-docs/raw/main/docs/reports/GTS_BacklogBusters_Launch.html) |
 | Backlog Busters Criteria | Incentive program criteria document | [Download](https://github.com/armieespejon/gts-docs/raw/main/docs/reports/GTS_BacklogBusters_Criteria.docx) |
+| Ops Incident & Maintenance Calendar | Living calendar of platform incidents, maintenance windows and ACN events | [Download](https://github.com/armieespejon/gts-docs/raw/main/docs/reports/GTS_Ops_Calendar.html) |
 
 ## Meeting Summaries
 
