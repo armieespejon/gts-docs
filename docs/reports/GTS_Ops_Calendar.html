@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>GTS ESM — Ops Incident & Maintenance Calendar</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Segoe UI', Arial, sans-serif; background: #0d1117; color: #e6edf3; padding: 32px; max-width: 1200px; margin: 0 auto; }
+
+  .page-header { margin-bottom: 28px; padding-bottom: 16px; border-bottom: 3px solid #007DB8; display: flex; justify-content: space-between; align-items: flex-end; }
+  .page-header h1 { font-size: 22px; font-weight: 700; color: #38b6e8; }
+  .page-header .sub { font-size: 12px; color: #4d606e; text-align: right; line-height: 1.6; }
+
+  /* LEGEND */
+  .legend { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 28px; }
+  .legend-item { display: flex; align-items: center; gap: 6px; font-size: 12px; color: #c9d1d9; }
+  .legend-dot { width: 14px; height: 14px; border-radius: 3px; flex-shrink: 0; }
+
+  /* FILTERS */
+  .filters { display: flex; gap: 10px; margin-bottom: 24px; flex-wrap: wrap; }
+  .filter-btn { background: #161b22; border: 1px solid #30363d; border-radius: 20px; padding: 5px 16px; font-size: 12px; color: #8b949e; cursor: pointer; transition: all 0.2s; }
+  .filter-btn:hover { border-color: #38b6e8; color: #38b6e8; }
+  .filter-btn.active { background: #007DB8; border-color: #007DB8; color: #fff; }
+
+  /* CALENDAR */
+  .month-section { margin-bottom: 36px; }
+  .month-title { font-size: 14px; font-weight: 700; color: #38b6e8; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 12px; display: flex; align-items: center; gap: 10px; }
+  .month-title .rule { flex: 1; height: 1px; background: linear-gradient(to right, #007DB8, transparent); }
+
+  .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; margin-bottom: 4px; }
+  .day-header { text-align: center; font-size: 10px; font-weight: 700; color: #4d606e; text-transform: uppercase; padding: 4px; }
+  .day-cell { background: #161b22; border: 1px solid #21262d; border-radius: 6px; min-height: 72px; padding: 5px; position: relative; cursor: default; transition: border-color 0.2s; }
+  .day-cell:hover { border-color: #30363d; }
+  .day-cell.empty { background: transparent; border-color: transparent; }
+  .day-cell.today { border-color: #38b6e8; }
+  .day-num { font-size: 11px; font-weight: 600; color: #4d606e; margin-bottom: 3px; }
+  .day-cell.today .day-num { color: #38b6e8; font-weight: 700; }
+  .event-chip { border-radius: 3px; padding: 2px 5px; font-size: 9px; font-weight: 700; margin-bottom: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; cursor: pointer; transition: opacity 0.2s; }
+  .event-chip:hover { opacity: 0.85; }
+  .event-chip.incident    { background: rgba(248,81,73,0.25); color: #f85149; border-left: 2px solid #f85149; }
+  .event-chip.maintenance { background: rgba(240,171,0,0.2); color: #F0AB00; border-left: 2px solid #F0AB00; }
+  .event-chip.enhancement { background: rgba(56,182,232,0.2); color: #38b6e8; border-left: 2px solid #38b6e8; }
+  .event-chip.acn         { background: rgba(196,181,253,0.2); color: #c4b5fd; border-left: 2px solid #c4b5fd; }
+  .event-chip.monitoring  { background: rgba(63,185,80,0.2); color: #3fb950; border-left: 2px solid #3fb950; }
+  .event-chip.hidden { display: none; }
+
+  /* LOG TABLE */
+  .log-section { margin-top: 36px; }
+  .log-title { font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: #38b6e8; margin-bottom: 14px; }
+  table { width: 100%; border-collapse: collapse; font-size: 11.5px; }
+  th { background: #007DB8; color: #fff; padding: 8px 10px; text-align: left; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; position: sticky; top: 0; }
+  td { padding: 8px 10px; border-bottom: 1px solid #21262d; color: #c9d1d9; vertical-align: top; }
+  tr:nth-child(even) td { background: #161b22; }
+  tr:hover td { background: rgba(56,182,232,0.05); }
+  .type-badge { display: inline-block; padding: 2px 8px; border-radius: 10px; font-size: 10px; font-weight: 700; white-space: nowrap; }
+  .type-badge.incident    { background: rgba(248,81,73,0.15); color: #f85149; }
+  .type-badge.maintenance { background: rgba(240,171,0,0.15); color: #F0AB00; }
+  .type-badge.enhancement { background: rgba(56,182,232,0.15); color: #38b6e8; }
+  .type-badge.acn         { background: rgba(196,181,253,0.15); color: #c4b5fd; }
+  .type-badge.monitoring  { background: rgba(63,185,80,0.15); color: #3fb950; }
+  .status-open     { color: #f85149; font-weight: 700; }
+  .status-resolved { color: #3fb950; }
+  .status-monitor  { color: #F0AB00; }
+  .impact-high { color: #f85149; font-weight: 700; }
+  .impact-med  { color: #F0AB00; }
+  .impact-low  { color: #3fb950; }
+
+  /* TOOLTIP */
+  .tooltip { position: fixed; background: #21262d; border: 1px solid #30363d; border-radius: 8px; padding: 10px 14px; font-size: 11px; color: #c9d1d9; max-width: 280px; z-index: 1000; pointer-events: none; box-shadow: 0 8px 24px rgba(0,0,0,0.5); display: none; line-height: 1.6; }
+  .tooltip .tt-title { font-weight: 700; color: #fff; margin-bottom: 4px; font-size: 12px; }
+  .tooltip .tt-type { font-size: 10px; margin-bottom: 6px; }
+
+  .page-footer { margin-top: 24px; font-size: 11px; color: #30363d; text-align: center; padding-top: 14px; border-top: 1px solid #21262d; }
+</style>
+</head>
+<body>
+
+<div class="page-header">
+  <div>
+    <h1>GTS ESM — Ops Incident &amp; Maintenance Calendar</h1>
+    <div style="font-size:13px;color:#7d8fa1;margin-top:4px;">Platform incidents, maintenance windows, ACN events &amp; enhancements — 2026</div>
+  </div>
+  <div class="sub">Last updated: June 22, 2026<br>Source: Case data + handover transcripts</div>
+</div>
+
+<!-- LEGEND -->
+<div class="legend">
+  <div class="legend-item"><div class="legend-dot" style="background:#f85149;"></div> Incident</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#F0AB00;"></div> Maintenance</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#38b6e8;"></div> Enhancement</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#c4b5fd;"></div> ACN Event</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#3fb950;"></div> Monitoring</div>
+</div>
+
+<!-- FILTERS -->
+<div class="filters">
+  <div class="filter-btn active" onclick="filterEvents('all', this)">All</div>
+  <div class="filter-btn" onclick="filterEvents('incident', this)">Incidents</div>
+  <div class="filter-btn" onclick="filterEvents('maintenance', this)">Maintenance</div>
+  <div class="filter-btn" onclick="filterEvents('acn', this)">ACN Events</div>
+  <div class="filter-btn" onclick="filterEvents('enhancement', this)">Enhancements</div>
+  <div class="filter-btn" onclick="filterEvents('monitoring', this)">Monitoring</div>
+</div>
+
+<!-- JUNE 2026 -->
+<div class="month-section">
+  <div class="month-title">June 2026 <div class="rule"></div></div>
+  <div class="calendar-grid">
+    <div class="day-header">Sun</div><div class="day-header">Mon</div><div class="day-header">Tue</div>
+    <div class="day-header">Wed</div><div class="day-header">Thu</div><div class="day-header">Fri</div>
+    <div class="day-header">Sat</div>
+
+    <!-- Week 1: Jun 1-7 -->
+    <div class="day-cell">
+      <div class="day-num">1</div>
+      <div class="event-chip acn" data-id="1" onclick="showDetail(1)">ACN AI Week</div>
+    </div>
+    <div class="day-cell"><div class="day-num">2</div><div class="event-chip acn" data-id="1" onclick="showDetail(1)">ACN AI Week</div></div>
+    <div class="day-cell"><div class="day-num">3</div><div class="event-chip acn" data-id="1" onclick="showDetail(1)">ACN AI Week</div></div>
+    <div class="day-cell"><div class="day-num">4</div><div class="event-chip acn" data-id="1" onclick="showDetail(1)">ACN AI Week</div></div>
+    <div class="day-cell"><div class="day-num">5</div><div class="event-chip acn" data-id="1" onclick="showDetail(1)">ACN AI Week</div></div>
+    <div class="day-cell"><div class="day-num">6</div><div class="event-chip acn" data-id="1" onclick="showDetail(1)">ACN AI Week</div></div>
+    <div class="day-cell"><div class="day-num">7</div><div class="event-chip acn" data-id="1" onclick="showDetail(1)">ACN AI Week</div></div>
+
+    <!-- Week 2: Jun 8-14 -->
+    <div class="day-cell"><div class="day-num">8</div></div>
+    <div class="day-cell"><div class="day-num">9</div><div class="event-chip incident" data-id="2" onclick="showDetail(2)">IBP800 Integration</div></div>
+    <div class="day-cell"><div class="day-num">10</div><div class="event-chip incident" data-id="2" onclick="showDetail(2)">IBP800 Integration</div></div>
+    <div class="day-cell"><div class="day-num">11</div><div class="event-chip incident" data-id="2" onclick="showDetail(2)">IBP800 Integration</div></div>
+    <div class="day-cell"><div class="day-num">12</div></div>
+    <div class="day-cell"><div class="day-num">13</div></div>
+    <div class="day-cell"><div class="day-num">14</div></div>
+
+    <!-- Week 3: Jun 15-21 -->
+    <div class="day-cell"><div class="day-num">15</div></div>
+    <div class="day-cell"><div class="day-num">16</div></div>
+    <div class="day-cell"><div class="day-num">17</div></div>
+    <div class="day-cell"><div class="day-num">18</div></div>
+    <div class="day-cell"><div class="day-num">19</div>
+      <div class="event-chip incident" data-id="3" onclick="showDetail(3)">Exam System Down</div>
+      <div class="event-chip maintenance" data-id="5" onclick="showDetail(5)">THR81 Maintenance</div>
+    </div>
+    <div class="day-cell"><div class="day-num">20</div>
+      <div class="event-chip incident" data-id="3" onclick="showDetail(3)">Exam System Down</div>
+      <div class="event-chip maintenance" data-id="5" onclick="showDetail(5)">THR81 Maintenance</div>
+      <div class="event-chip incident" data-id="4" onclick="showDetail(4)">CPI 503 Error</div>
+    </div>
+    <div class="day-cell"><div class="day-num">21</div>
+      <div class="event-chip maintenance" data-id="5" onclick="showDetail(5)">THR81 Maintenance</div>
+    </div>
+
+    <!-- Week 4: Jun 22-28 -->
+    <div class="day-cell today"><div class="day-num">22 ★</div>
+      <div class="event-chip maintenance" data-id="5" onclick="showDetail(5)">THR81 Maintenance</div>
+      <div class="event-chip monitoring" data-id="6" onclick="showDetail(6)">Backlog Busters W1</div>
+    </div>
+    <div class="day-cell"><div class="day-num">23</div><div class="event-chip monitoring" data-id="6" onclick="showDetail(6)">Backlog Busters W1</div></div>
+    <div class="day-cell"><div class="day-num">24</div><div class="event-chip monitoring" data-id="6" onclick="showDetail(6)">Backlog Busters W1</div></div>
+    <div class="day-cell"><div class="day-num">25</div><div class="event-chip monitoring" data-id="6" onclick="showDetail(6)">Backlog Busters W1</div></div>
+    <div class="day-cell"><div class="day-num">26</div><div class="event-chip monitoring" data-id="6" onclick="showDetail(6)">Backlog Busters W1</div></div>
+    <div class="day-cell"><div class="day-num">27</div><div class="event-chip monitoring" data-id="6" onclick="showDetail(6)">Backlog Busters W1</div></div>
+    <div class="day-cell"><div class="day-num">28</div><div class="event-chip monitoring" data-id="6" onclick="showDetail(6)">Backlog Busters W1</div></div>
+
+    <!-- Jun 29-30 -->
+    <div class="day-cell"><div class="day-num">29</div><div class="event-chip monitoring" data-id="7" onclick="showDetail(7)">Backlog Busters W2</div></div>
+    <div class="day-cell"><div class="day-num">30</div>
+      <div class="event-chip monitoring" data-id="7" onclick="showDetail(7)">Backlog Busters W2</div>
+      <div class="event-chip monitoring" data-id="8" onclick="showDetail(8)">W1 Results</div>
+    </div>
+    <div class="day-cell empty"></div><div class="day-cell empty"></div><div class="day-cell empty"></div><div class="day-cell empty"></div><div class="day-cell empty"></div>
+  </div>
+</div>
+
+<!-- MAY 2026 -->
+<div class="month-section">
+  <div class="month-title">May 2026 <div class="rule"></div></div>
+  <div class="calendar-grid">
+    <div class="day-header">Sun</div><div class="day-header">Mon</div><div class="day-header">Tue</div>
+    <div class="day-header">Wed</div><div class="day-header">Thu</div><div class="day-header">Fri</div>
+    <div class="day-header">Sat</div>
+    <!-- May starts on Friday -->
+    <div class="day-cell empty"></div><div class="day-cell empty"></div><div class="day-cell empty"></div><div class="day-cell empty"></div><div class="day-cell empty"></div>
+    <div class="day-cell"><div class="day-num">1</div></div>
+    <div class="day-cell"><div class="day-num">2</div></div>
+    <div class="day-cell"><div class="day-num">3</div></div>
+    <div class="day-cell"><div class="day-num">4</div></div>
+    <div class="day-cell"><div class="day-num">5</div><div class="event-chip acn" data-id="9" onclick="showDetail(9)">IBP800 ACN CDC</div></div>
+    <div class="day-cell"><div class="day-num">6</div></div>
+    <div class="day-cell"><div class="day-num">7</div></div>
+    <div class="day-cell"><div class="day-num">8</div></div>
+    <div class="day-cell"><div class="day-num">9</div></div>
+    <div class="day-cell"><div class="day-num">10</div></div>
+    <div class="day-cell"><div class="day-num">11</div></div>
+    <div class="day-cell"><div class="day-num">12</div></div>
+    <div class="day-cell"><div class="day-num">13</div></div>
+    <div class="day-cell"><div class="day-num">14</div><div class="event-chip acn" data-id="10" onclick="showDetail(10)">IBP800 ACN CDC</div></div>
+    <div class="day-cell"><div class="day-num">15</div></div>
+    <div class="day-cell"><div class="day-num">16</div></div>
+    <div class="day-cell"><div class="day-num">17</div></div>
+    <div class="day-cell"><div class="day-num">18</div></div>
+    <div class="day-cell"><div class="day-num">19</div></div>
+    <div class="day-cell"><div class="day-num">20</div></div>
+    <div class="day-cell"><div class="day-num">21</div></div>
+    <div class="day-cell"><div class="day-num">22</div></div>
+    <div class="day-cell"><div class="day-num">23</div></div>
+    <div class="day-cell"><div class="day-num">24</div></div>
+    <div class="day-cell"><div class="day-num">25</div></div>
+    <div class="day-cell"><div class="day-num">26</div></div>
+    <div class="day-cell"><div class="day-num">27</div></div>
+    <div class="day-cell"><div class="day-num">28</div></div>
+    <div class="day-cell"><div class="day-num">29</div></div>
+    <div class="day-cell"><div class="day-num">30</div></div>
+    <div class="day-cell"><div class="day-num">31</div></div>
+    <div class="day-cell empty"></div><div class="day-cell empty"></div><div class="day-cell empty"></div><div class="day-cell empty"></div><div class="day-cell empty"></div><div class="day-cell empty"></div>
+  </div>
+</div>
+
+<!-- LOG TABLE -->
+<div class="log-section">
+  <div class="log-title">&#128203; Incident &amp; Event Log</div>
+  <table id="logTable">
+    <tr>
+      <th>#</th>
+      <th>Date / Period</th>
+      <th>Type</th>
+      <th>System / Course</th>
+      <th>Impact</th>
+      <th>Case Count</th>
+      <th>Status</th>
+      <th>Notes / Action</th>
+    </tr>
+    <tr data-type="acn">
+      <td>1</td>
+      <td>Jun 1–7, 2026</td>
+      <td><span class="type-badge acn">ACN Event</span></td>
+      <td>C_AIG (SAP Gen AI)</td>
+      <td><span class="impact-high">High</span></td>
+      <td>351 cases</td>
+      <td><span class="status-resolved">Resolved</span></td>
+      <td>Accenture AI Certification Week. Mass AI API errors ("error occurred while calling the AI API", "network error"). Excluded from Apr–Jun inflow baseline (anomaly).</td>
+    </tr>
+    <tr data-type="incident">
+      <td>2</td>
+      <td>Jun 9–11, 2026</td>
+      <td><span class="type-badge incident">Incident</span></td>
+      <td>IBP800 — S/4HANA to IBP</td>
+      <td><span class="impact-med">Medium</span></td>
+      <td>1 case (open)</td>
+      <td><span class="status-open">Open — Awaiting 3rd Party</span></td>
+      <td>System integration failure during ACN CDC ILT class. Case 5000364135 still open 13+ days. Follow-up with third party required.</td>
+    </tr>
+    <tr data-type="incident">
+      <td>3</td>
+      <td>Jun 19–20, 2026</td>
+      <td><span class="type-badge incident">Incident</span></td>
+      <td>C_TS452, C_TS462, C_CPI, C_DBADM</td>
+      <td><span class="impact-high">High</span></td>
+      <td>~60+ cases</td>
+      <td><span class="status-resolved">Resolved</span></td>
+      <td>"System temporarily unavailable" during live exams. Started Thu Jun 18, peaked Fri Jun 19 (325 cases). Impacted multiple certification systems. Enrollment auto-cancelled; attempts reinstated. Tihomir looped in Likith via email.</td>
+    </tr>
+    <tr data-type="incident">
+      <td>4</td>
+      <td>Jun 20, 2026</td>
+      <td><span class="type-badge incident">Incident</span></td>
+      <td>C_CPI — Error 503</td>
+      <td><span class="impact-med">Medium</span></td>
+      <td>~10 cases</td>
+      <td><span class="status-resolved">Resolved</span></td>
+      <td>Service unavailable (503) error for CPI learners. Swarna flagged Saturday morning. Some learners still able to pass despite error. Likely a transient glitch.</td>
+    </tr>
+    <tr data-type="maintenance">
+      <td>5</td>
+      <td>Jun 19–22, 2026</td>
+      <td><span class="type-badge maintenance">Maintenance</span></td>
+      <td>THR81 Practice System</td>
+      <td><span class="impact-high">High</span></td>
+      <td>32 cases (Fri–Sun)</td>
+      <td><span class="status-monitor">Monitoring</span></td>
+      <td>THR81 under scheduled maintenance. Learners who booked before maintenance window could not access. 4 active cases unassigned as of Jun 22. Maintenance ended Jun 22 EOD. 7 cases still open.</td>
+    </tr>
+    <tr data-type="monitoring">
+      <td>6</td>
+      <td>Jun 22 – Jul 19, 2026</td>
+      <td><span class="type-badge monitoring">Program</span></td>
+      <td>GTS ESM PH Team</td>
+      <td><span class="impact-low">Positive</span></td>
+      <td>—</td>
+      <td><span class="status-monitor">Active</span></td>
+      <td>Backlog Busters incentive program. 4-week sprint. 2 winners/week (SAP Appreciate Award). Results every Tuesday: Jun 30, Jul 7, Jul 14, Jul 21. Approved by management.</td>
+    </tr>
+    <tr data-type="acn">
+      <td>7</td>
+      <td>May 5, 2026</td>
+      <td><span class="type-badge acn">ACN Event</span></td>
+      <td>IBP800_61 CDC ILT</td>
+      <td><span class="impact-low">Low</span></td>
+      <td>1 case</td>
+      <td><span class="status-resolved">Resolved</span></td>
+      <td>ACN CDC ILT class (Class ID: b43faa29). GTS coordination required for participant support. Resolved.</td>
+    </tr>
+    <tr data-type="acn">
+      <td>8</td>
+      <td>May 14, 2026</td>
+      <td><span class="type-badge acn">ACN Event</span></td>
+      <td>IBP800_61 CDC ILT</td>
+      <td><span class="impact-low">Low</span></td>
+      <td>1 case</td>
+      <td><span class="status-resolved">Resolved</span></td>
+      <td>ACN CDC ILT class (Class ID: 160bdab0). GTS coordination required. Resolved.</td>
+    </tr>
+  </table>
+</div>
+
+<!-- TOOLTIP -->
+<div class="tooltip" id="tooltip"></div>
+
+<div class="page-footer">GTS ESM Operations &nbsp;·&nbsp; Ops Incident &amp; Maintenance Calendar &nbsp;·&nbsp; Updated June 22, 2026 &nbsp;·&nbsp; Click any event to see details</div>
+
+<script>
+  var events = {
+    1: { title: 'ACN AI Certification Week', type: 'ACN Event', date: 'Jun 1–7, 2026', system: 'C_AIG', cases: '351 cases', status: 'Resolved', notes: 'Mass AI API errors during Accenture bulk certification run. Excluded from baseline.' },
+    2: { title: 'IBP800 System Integration Failure', type: 'Incident', date: 'Jun 9–11, 2026', system: 'IBP800 / S4HANA', cases: '1 case open', status: 'OPEN — Awaiting 3rd Party', notes: 'S/4HANA to IBP integration failure during ACN CDC ILT class.' },
+    3: { title: 'Exam System Unavailable', type: 'Incident', date: 'Jun 19–20, 2026', system: 'C_TS452 / C_TS462 / C_CPI', cases: '~60+ cases', status: 'Resolved', notes: '"System temporarily unavailable" during live exams. Spike to 325 cases on Fri Jun 19.' },
+    4: { title: 'CPI Error 503', type: 'Incident', date: 'Jun 20, 2026', system: 'C_CPI', cases: '~10 cases', status: 'Resolved', notes: 'Service unavailable 503 error for CPI learners. Transient glitch.' },
+    5: { title: 'THR81 Scheduled Maintenance', type: 'Maintenance', date: 'Jun 19–22, 2026', system: 'THR81 Practice System', cases: '32 cases Fri–Sun', status: 'Monitoring — 7 still open', notes: 'Practice system under maintenance. Learners with booked slots could not access. Maintenance ended Jun 22 EOD.' },
+    6: { title: 'Backlog Busters W1', type: 'Program', date: 'Jun 22–28, 2026', system: 'GTS ESM PH Team', cases: '—', status: 'Active', notes: 'Week 1 of 4-week incentive sprint. Results announced Jun 30.' },
+    7: { title: 'Backlog Busters W2', type: 'Program', date: 'Jun 29–Jul 5, 2026', system: 'GTS ESM PH Team', cases: '—', status: 'Upcoming', notes: 'Week 2 of Backlog Busters. Results announced Jul 7.' },
+    8: { title: 'Backlog Busters W1 Results', type: 'Program', date: 'Jun 30, 2026', system: 'GTS ESM PH Team', cases: '—', status: 'Upcoming', notes: 'Week 1 winners announced via email and SharePoint.' },
+    9: { title: 'ACN IBP800 CDC Class', type: 'ACN Event', date: 'May 5, 2026', system: 'IBP800_61', cases: '1 case', status: 'Resolved', notes: 'ACN CDC ILT class support. Class ID: b43faa29.' },
+    10: { title: 'ACN IBP800 CDC Class', type: 'ACN Event', date: 'May 14, 2026', system: 'IBP800_61', cases: '1 case', status: 'Resolved', notes: 'ACN CDC ILT class support. Class ID: 160bdab0.' }
+  };
+
+  var tooltip = document.getElementById('tooltip');
+
+  function showDetail(id) {
+    var e = events[id];
+    if (!e) return;
+    tooltip.innerHTML = '<div class="tt-title">' + e.title + '</div>' +
+      '<div class="tt-type">' + e.type + ' &nbsp;·&nbsp; ' + e.date + '</div>' +
+      '<div><strong>System:</strong> ' + e.system + '</div>' +
+      '<div><strong>Cases:</strong> ' + e.cases + '</div>' +
+      '<div><strong>Status:</strong> ' + e.status + '</div>' +
+      '<div style="margin-top:6px;color:#8b949e;">' + e.notes + '</div>';
+    tooltip.style.display = 'block';
+  }
+
+  document.addEventListener('mousemove', function(e) {
+    tooltip.style.left = (e.clientX + 14) + 'px';
+    tooltip.style.top  = (e.clientY - 10) + 'px';
+  });
+
+  document.addEventListener('click', function(e) {
+    if (!e.target.classList.contains('event-chip')) {
+      tooltip.style.display = 'none';
+    }
+  });
+
+  function filterEvents(type, btn) {
+    document.querySelectorAll('.filter-btn').forEach(function(b) { b.classList.remove('active'); });
+    btn.classList.add('active');
+    document.querySelectorAll('.event-chip').forEach(function(chip) {
+      if (type === 'all' || chip.classList.contains(type)) {
+        chip.classList.remove('hidden');
+      } else {
+        chip.classList.add('hidden');
+      }
+    });
+    document.querySelectorAll('#logTable tr[data-type]').forEach(function(row) {
+      if (type === 'all' || row.getAttribute('data-type') === type) {
+        row.style.display = '';
+      } else {
+        row.style.display = 'none';
+      }
+    });
+  }
+</script>
+
+</body>
+</html>
