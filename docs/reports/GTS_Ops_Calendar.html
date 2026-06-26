@@ -137,7 +137,9 @@
     <div class="day-cell"><div class="day-num">15</div></div>
     <div class="day-cell"><div class="day-num">16</div></div>
     <div class="day-cell"><div class="day-num">17</div></div>
-    <div class="day-cell"><div class="day-num">18</div></div>
+    <div class="day-cell"><div class="day-num">18</div>
+      <div class="event-chip enhancement" data-id="13" onclick="showDetail(13)">DE Onboarding</div>
+    </div>
     <div class="day-cell"><div class="day-num">19</div>
       <div class="event-chip incident" data-id="3" onclick="showDetail(3)">Exam System Down</div>
       <div class="event-chip maintenance" data-id="5" onclick="showDetail(5)">THR81 Maintenance</div>
@@ -333,7 +335,8 @@
     9: { title: 'ACN IBP800 CDC Class', type: 'ACN Event', date: 'May 5, 2026', system: 'IBP800_61', cases: '1 case', status: 'Resolved', notes: 'ACN CDC ILT class support. Class ID: b43faa29.' },
     10: { title: 'ACN IBP800 CDC Class', type: 'ACN Event', date: 'May 14, 2026', system: 'IBP800_61', cases: '1 case', status: 'Resolved', notes: 'ACN CDC ILT class support. Class ID: 160bdab0.' },
     11: { title: 'C_CPI Issues', type: 'Incident', date: 'Jun 22–25, 2026', system: 'C_CPI', cases: 'Multiple', status: 'Monitoring', notes: '503 errors, system unavailable, and all exam slots fully booked reported this week. Learners unable to access or schedule exams. Under monitoring.' },
-    12: { title: 'C_THR Back Online', type: 'Enhancement', date: 'Jun 25, 2026', system: 'C_THR', cases: '—', status: 'Resolved', notes: 'C_THR system back online as of June 25, 2026.' }
+    12: { title: 'C_THR Back Online', type: 'Enhancement', date: 'Jun 25, 2026', system: 'C_THR', cases: '—', status: 'Resolved', notes: 'C_THR system back online as of June 25, 2026.' },
+    13: { title: 'New DE Agents Onboarded', type: 'Enhancement', date: 'Jun 18, 2026', system: 'GTS ESM DE Team', cases: '—', status: 'Completed', notes: '5 new DE agents onboarded: Saksham Pratap Rana, Ankit Sharan, Akanksha Aakriti, Medhavi Maddheshia, Paras Arora. Team now at 13 PH + 11 DE = 24 agents.' }
   };
 
   var tooltip = document.getElementById('tooltip');
