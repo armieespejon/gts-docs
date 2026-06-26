@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>GTS ESM Reports</title>
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:'Segoe UI',Arial,sans-serif;background:#0d1117;color:#c9d1d9;min-height:100vh}
+
+    .header{background:#161b22;border-bottom:1px solid #30363d;padding:24px 32px}
+    .header h1{font-size:22px;font-weight:800;color:#fff;margin-bottom:4px}
+    .header .sub{font-size:13px;color:#8b949e}
+
+    .container{max-width:900px;margin:32px auto;padding:0 24px}
+
+    .section-title{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.8px;color:#8b949e;margin-bottom:14px;margin-top:32px}
+
+    .cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:16px}
+    .card{background:#161b22;border:1px solid #30363d;border-radius:10px;padding:18px 20px;text-decoration:none;color:inherit;transition:border-color 0.2s,box-shadow 0.2s;display:block}
+    .card:hover{border-color:#58a6ff;box-shadow:0 4px 16px rgba(88,166,255,0.1)}
+    .card-icon{font-size:22px;margin-bottom:10px}
+    .card-title{font-size:14px;font-weight:700;color:#fff;margin-bottom:4px}
+    .card-desc{font-size:12px;color:#8b949e;line-height:1.5}
+    .card-tag{display:inline-block;font-size:10px;font-weight:600;border-radius:4px;padding:2px 8px;margin-top:8px}
+    .tag-live{background:rgba(63,185,80,0.15);color:#3fb950;border:1px solid rgba(63,185,80,0.3)}
+    .tag-download{background:rgba(88,166,255,0.15);color:#58a6ff;border:1px solid rgba(88,166,255,0.3)}
+
+    .footer{text-align:center;font-size:11px;color:#8b949e;padding:32px;margin-top:16px;border-top:1px solid #21262d}
+  </style>
+</head>
+<body>
+
+<div class="header">
+  <h1>&#128202; GTS ESM Reports</h1>
+  <div class="sub">Global Training Support &mdash; ESM Operations &mdash; 2026</div>
+</div>
+
+<div class="container">
+
+  <div class="section-title">&#128337; Live Reports — Click to Open</div>
+  <div class="cards">
+
+    <a class="card" href="GTS_Ops_Calendar.html">
+      <div class="card-icon">&#128197;</div>
+      <div class="card-title">Ops Incident &amp; Maintenance Calendar</div>
+      <div class="card-desc">Platform incidents, maintenance windows, ACN events &amp; enhancements. Updated Jun 26, 2026.</div>
+      <span class="card-tag tag-live">Live</span>
+    </a>
+
+    <a class="card" href="GTS_TeamRampUp_Plan.html">
+      <div class="card-icon">&#128200;</div>
+      <div class="card-title">Team Ramp-Up &amp; Weekend Capacity Plan</div>
+      <div class="card-desc">New agent ramp model, Sunday shift plan, Monday load projection.</div>
+      <span class="card-tag tag-live">Live</span>
+    </a>
+
+    <a class="card" href="GTS_BacklogBusters_Launch.html">
+      <div class="card-icon">&#127942;</div>
+      <div class="card-title">Backlog Busters Launch Bulletin</div>
+      <div class="card-desc">4-week sprint incentive program launch. Jun 22 &ndash; Jul 19, 2026.</div>
+      <span class="card-tag tag-live">Live</span>
+    </a>
+
+  </div>
+
+  <div class="section-title">&#9881;&#65039; Generated Reports — Run Scripts Locally</div>
+  <div class="cards">
+
+    <a class="card" href="https://github.com/armieespejon/gts-docs/raw/main/docs/scripts/Generate_Exec_Summary.ps1">
+      <div class="card-icon">&#128203;</div>
+      <div class="card-title">Executive Summary</div>
+      <div class="card-desc">YTD KPIs, CSAT trend, monthly case volume, top courses, DSAT drivers. Run <code>Generate_Exec_Summary.ps1</code></div>
+      <span class="card-tag tag-download">Script</span>
+    </a>
+
+    <a class="card" href="https://github.com/armieespejon/gts-docs/raw/main/docs/scripts/Generate_Daily_Inflow.ps1">
+      <div class="card-icon">&#128202;</div>
+      <div class="card-title">Daily Inflow &amp; Closures</div>
+      <div class="card-desc">W1–W4 weekly + daily inflow/closure per agent with leaderboard. Run <code>Generate_Daily_Inflow.ps1</code></div>
+      <span class="card-tag tag-download">Script</span>
+    </a>
+
+    <a class="card" href="https://github.com/armieespejon/gts-docs/raw/main/docs/scripts/Generate_CSAT_Bulletin.ps1">
+      <div class="card-icon">&#11088;</div>
+      <div class="card-title">CSAT Bulletin</div>
+      <div class="card-desc">Monthly CSAT, DSAT analysis, voice of customer, verbatim comments. Run <code>Generate_CSAT_Bulletin.ps1</code></div>
+      <span class="card-tag tag-download">Script</span>
+    </a>
+
+    <a class="card" href="https://github.com/armieespejon/gts-docs/raw/main/docs/scripts/Generate_BacklogBusters_Midweek.ps1">
+      <div class="card-icon">&#127381;</div>
+      <div class="card-title">Backlog Busters Midweek</div>
+      <div class="card-desc">PH team standings, scoring breakdown, CSAT bonuses. Run <code>Generate_BacklogBusters_Midweek.ps1</code></div>
+      <span class="card-tag tag-download">Script</span>
+    </a>
+
+    <a class="card" href="https://github.com/armieespejon/gts-docs/raw/main/docs/scripts/Generate_Agent_Backlog.ps1">
+      <div class="card-icon">&#128184;</div>
+      <div class="card-title">Agent Backlog</div>
+      <div class="card-desc">Per-agent backlog with 5-run trend and history. Run <code>Generate_Agent_Backlog.ps1</code></div>
+      <span class="card-tag tag-download">Script</span>
+    </a>
+
+    <a class="card" href="https://github.com/armieespejon/gts-docs/raw/main/docs/scripts/Generate_Winners_Circle.ps1">
+      <div class="card-icon">&#127881;</div>
+      <div class="card-title">Winners Circle</div>
+      <div class="card-desc">Weekly winners bulletin with confetti and award cards. Run <code>Generate_Winners_Circle.ps1</code></div>
+      <span class="card-tag tag-download">Script</span>
+    </a>
+
+  </div>
+
+  <div class="section-title">&#128279; All Scripts</div>
+  <div class="cards">
+    <a class="card" href="https://github.com/armieespejon/gts-docs/tree/main/docs/scripts">
+      <div class="card-icon">&#128196;</div>
+      <div class="card-title">View All Scripts on GitHub</div>
+      <div class="card-desc">Browse and download all PowerShell automation scripts for GTS ESM reporting.</div>
+      <span class="card-tag tag-download">GitHub</span>
+    </a>
+  </div>
+
+</div>
+
+<div class="footer">
+  GTS ESM Operations &mdash; Updated June 26, 2026
+</div>
+
+</body>
+</html>
