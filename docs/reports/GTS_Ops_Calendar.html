@@ -166,6 +166,7 @@
     <div class="day-cell"><div class="day-num">27</div><div class="event-chip monitoring" data-id="6" onclick="showDetail(6)">Backlog Busters W1</div></div>
     <div class="day-cell"><div class="day-num">28</div><div class="event-chip monitoring" data-id="6" onclick="showDetail(6)">Backlog Busters W1</div></div>
     <div class="day-cell"><div class="day-num">29</div><div class="event-chip incident" data-id="15" onclick="showDetail(15)">SBA Not Started</div><div class="event-chip incident" data-id="16" onclick="showDetail(16)">C_THR SPC Delay</div></div>
+    <div class="day-cell"><div class="day-num">30</div><div class="event-chip monitoring" data-id="17" onclick="showDetail(17)">LHub Subscription Exp</div></div>
 
     <!-- Jun 29-30 -->
     <div class="day-cell"><div class="day-num">29</div><div class="event-chip monitoring" data-id="7" onclick="showDetail(7)">Backlog Busters W2</div></div>
@@ -375,6 +376,16 @@
       <td><span class="status-open">Open</span></td>
       <td>SPC delay in deploying instances. Earliest slot to book is July 1. Learners unable to schedule C_THR exams.</td>
     </tr>
+    <tr data-type="monitoring">
+      <td>14</td>
+      <td>Jun 30, 2026</td>
+      <td><span class="type-badge monitoring">Monitoring</span></td>
+      <td>Learning Hub</td>
+      <td><span class="impact-med">Medium</span></td>
+      <td>TBD</td>
+      <td><span class="status-monitor">Expected</span></td>
+      <td>Learning Hub subscriptions expiring for learners on June 30. Expected increase in access and certification-related cases. Monitor inflow on Jul 1.</td>
+    </tr>
   </table>
 </div>
 
@@ -400,7 +411,8 @@
     13: { title: 'New DE Agents Onboarded', type: 'Enhancement', date: 'Jun 18, 2026', system: 'GTS ESM DE Team', cases: '—', status: 'Completed', notes: '5 new DE agents onboarded: Saksham Pratap Rana, Ankit Sharan, Akanksha Aakriti, Medhavi Maddheshia, Paras Arora. Team now at 13 PH + 11 DE = 24 agents.' },
     14: { title: 'All 5 DE Agents Active', type: 'Enhancement', date: 'Jun 24, 2026', system: 'GTS ESM DE Team', cases: '—', status: 'Completed', notes: 'All 5 new DE agents confirmed active and handling cases as of June 24, 2026.' },
     15: { title: 'SBA System Not Started on Exam Submit', type: 'Incident', date: 'Jun 29, 2026', system: 'SBA — All Courses', cases: '149 cases (Jun 22-29)', status: 'Open', notes: 'Learners reporting system-based assessment not starting when submitting exam. Spike in SBA score assessment-related cases observed. Under investigation.' },
-    16: { title: 'C_THR — SPC Deployment Delay', type: 'Incident', date: 'Jun 29, 2026', system: 'C_THR**', cases: 'Multiple', status: 'Open', notes: 'SPC delay in deploying instances. Earliest available slot to book is July 1. Learners unable to schedule C_THR exams until then.' }
+    16: { title: 'C_THR — SPC Deployment Delay', type: 'Incident', date: 'Jun 29, 2026', system: 'C_THR**', cases: 'Multiple', status: 'Open', notes: 'SPC delay in deploying instances. Earliest available slot to book is July 1. Learners unable to schedule C_THR exams until then.' },
+    17: { title: 'Learning Hub Subscription Expiration', type: 'Monitoring', date: 'Jun 30, 2026', system: 'Learning Hub', cases: 'TBD', status: 'Expected', notes: 'Learning Hub subscriptions expiring for learners on June 30, 2026. Expected increase in access and certification-related cases. Teams to monitor inflow on Jul 1.' }
   };
 
   var tooltip = document.getElementById('tooltip');
