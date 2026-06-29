@@ -165,6 +165,7 @@
     <div class="day-cell"><div class="day-num">26</div><div class="event-chip monitoring" data-id="6" onclick="showDetail(6)">Backlog Busters W1</div></div>
     <div class="day-cell"><div class="day-num">27</div><div class="event-chip monitoring" data-id="6" onclick="showDetail(6)">Backlog Busters W1</div></div>
     <div class="day-cell"><div class="day-num">28</div><div class="event-chip monitoring" data-id="6" onclick="showDetail(6)">Backlog Busters W1</div></div>
+    <div class="day-cell"><div class="day-num">29</div><div class="event-chip incident" data-id="15" onclick="showDetail(15)">SBA Not Started</div><div class="event-chip incident" data-id="16" onclick="showDetail(16)">C_THR SPC Delay</div></div>
 
     <!-- Jun 29-30 -->
     <div class="day-cell"><div class="day-num">29</div><div class="event-chip monitoring" data-id="7" onclick="showDetail(7)">Backlog Busters W2</div></div>
@@ -354,13 +355,33 @@
       <td><span class="status-resolved">Resolved</span></td>
       <td>C_THR system back online as of June 25, 2026.</td>
     </tr>
+    <tr data-type="incident">
+      <td>12</td>
+      <td>Jun 29, 2026</td>
+      <td><span class="type-badge incident">Incident</span></td>
+      <td>SBA — All Courses</td>
+      <td><span class="impact-high">High</span></td>
+      <td>149 cases (Jun 22-29)</td>
+      <td><span class="status-open">Open</span></td>
+      <td>System-Based Assessment not starting when submitting exam. Spike in SBA score assessment cases. Under investigation.</td>
+    </tr>
+    <tr data-type="incident">
+      <td>13</td>
+      <td>Jun 29, 2026</td>
+      <td><span class="type-badge incident">Incident</span></td>
+      <td>C_THR**</td>
+      <td><span class="impact-high">High</span></td>
+      <td>Multiple</td>
+      <td><span class="status-open">Open</span></td>
+      <td>SPC delay in deploying instances. Earliest slot to book is July 1. Learners unable to schedule C_THR exams.</td>
+    </tr>
   </table>
 </div>
 
 <!-- TOOLTIP -->
 <div class="tooltip" id="tooltip"></div>
 
-<div class="page-footer">GTS ESM Operations &nbsp;·&nbsp; Ops Incident &amp; Maintenance Calendar &nbsp;·&nbsp; Updated June 22, 2026 &nbsp;·&nbsp; Click any event to see details</div>
+<div class="page-footer">GTS ESM Operations &nbsp;·&nbsp; Ops Incident &amp; Maintenance Calendar &nbsp;·&nbsp; Updated June 29, 2026 &nbsp;·&nbsp; Click any event to see details</div>
 
 <script>
   var events = {
@@ -377,7 +398,9 @@
     11: { title: 'C_CPI Issues', type: 'Incident', date: 'Jun 22–25, 2026', system: 'C_CPI', cases: 'Multiple', status: 'Monitoring', notes: '503 errors, system unavailable, and all exam slots fully booked reported this week. Learners unable to access or schedule exams. Under monitoring.' },
     12: { title: 'C_THR Back Online', type: 'Enhancement', date: 'Jun 25, 2026', system: 'C_THR', cases: '—', status: 'Resolved', notes: 'C_THR system back online as of June 25, 2026.' },
     13: { title: 'New DE Agents Onboarded', type: 'Enhancement', date: 'Jun 18, 2026', system: 'GTS ESM DE Team', cases: '—', status: 'Completed', notes: '5 new DE agents onboarded: Saksham Pratap Rana, Ankit Sharan, Akanksha Aakriti, Medhavi Maddheshia, Paras Arora. Team now at 13 PH + 11 DE = 24 agents.' },
-    14: { title: 'All 5 DE Agents Active', type: 'Enhancement', date: 'Jun 24, 2026', system: 'GTS ESM DE Team', cases: '—', status: 'Completed', notes: 'All 5 new DE agents confirmed active and handling cases as of June 24, 2026.' }
+    14: { title: 'All 5 DE Agents Active', type: 'Enhancement', date: 'Jun 24, 2026', system: 'GTS ESM DE Team', cases: '—', status: 'Completed', notes: 'All 5 new DE agents confirmed active and handling cases as of June 24, 2026.' },
+    15: { title: 'SBA System Not Started on Exam Submit', type: 'Incident', date: 'Jun 29, 2026', system: 'SBA — All Courses', cases: '149 cases (Jun 22-29)', status: 'Open', notes: 'Learners reporting system-based assessment not starting when submitting exam. Spike in SBA score assessment-related cases observed. Under investigation.' },
+    16: { title: 'C_THR — SPC Deployment Delay', type: 'Incident', date: 'Jun 29, 2026', system: 'C_THR**', cases: 'Multiple', status: 'Open', notes: 'SPC delay in deploying instances. Earliest available slot to book is July 1. Learners unable to schedule C_THR exams until then.' }
   };
 
   var tooltip = document.getElementById('tooltip');
