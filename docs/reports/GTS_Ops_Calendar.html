@@ -166,7 +166,7 @@
     <div class="day-cell"><div class="day-num">27</div><div class="event-chip monitoring" data-id="6" onclick="showDetail(6)">Backlog Busters W1</div></div>
     <div class="day-cell"><div class="day-num">28</div><div class="event-chip monitoring" data-id="6" onclick="showDetail(6)">Backlog Busters W1</div></div>
     <div class="day-cell"><div class="day-num">29</div><div class="event-chip incident" data-id="15" onclick="showDetail(15)">SBA Not Started</div><div class="event-chip incident" data-id="16" onclick="showDetail(16)">C_THR SPC Delay</div></div>
-    <div class="day-cell"><div class="day-num">30</div><div class="event-chip monitoring" data-id="17" onclick="showDetail(17)">LHub Subscription Exp</div></div>
+    <div class="day-cell"><div class="day-num">30</div><div class="event-chip monitoring" data-id="17" onclick="showDetail(17)">LHub Subscription Exp</div><div class="event-chip incident" data-id="18" onclick="showDetail(18)">Profile/Cert Inspector</div></div>
 
     <!-- Jun 29-30 -->
     <div class="day-cell"><div class="day-num">29</div><div class="event-chip monitoring" data-id="7" onclick="showDetail(7)">Backlog Busters W2</div></div>
@@ -386,6 +386,16 @@
       <td><span class="status-monitor">Expected</span></td>
       <td>Learning Hub subscriptions expiring for learners on June 30. Expected increase in access and certification-related cases. Monitor inflow on Jul 1.</td>
     </tr>
+    <tr data-type="incident">
+      <td>15</td>
+      <td>Jun 30, 2026</td>
+      <td><span class="type-badge incident">Incident</span></td>
+      <td>Profile / Certification Inspector</td>
+      <td><span class="impact-med">Medium</span></td>
+      <td>TBD</td>
+      <td><span class="status-open">Under Investigation</span></td>
+      <td>Issue reported with Profile and Certification Inspector tool. Under investigation as of Jun 30, 2026.</td>
+    </tr>
   </table>
 </div>
 
@@ -412,7 +422,8 @@
     14: { title: 'All 5 DE Agents Active', type: 'Enhancement', date: 'Jun 24, 2026', system: 'GTS ESM DE Team', cases: '—', status: 'Completed', notes: 'All 5 new DE agents confirmed active and handling cases as of June 24, 2026.' },
     15: { title: 'SBA System Not Started on Exam Submit', type: 'Incident', date: 'Jun 29, 2026', system: 'SBA — All Courses', cases: '149 cases (Jun 22-29)', status: 'Open', notes: 'Learners reporting system-based assessment not starting when submitting exam. Spike in SBA score assessment-related cases observed. Under investigation.' },
     16: { title: 'C_THR — SPC Deployment Delay', type: 'Incident', date: 'Jun 29, 2026', system: 'C_THR**', cases: 'Multiple', status: 'Open', notes: 'SPC delay in deploying instances. Earliest available slot to book is July 1. Learners unable to schedule C_THR exams until then.' },
-    17: { title: 'Learning Hub Subscription Expiration', type: 'Monitoring', date: 'Jun 30, 2026', system: 'Learning Hub', cases: 'TBD', status: 'Expected', notes: 'Learning Hub subscriptions expiring for learners on June 30, 2026. Expected increase in access and certification-related cases. Teams to monitor inflow on Jul 1.' }
+    17: { title: 'Learning Hub Subscription Expiration', type: 'Monitoring', date: 'Jun 30, 2026', system: 'Learning Hub', cases: 'TBD', status: 'Expected', notes: 'Learning Hub subscriptions expiring for learners on June 30, 2026. Expected increase in access and certification-related cases. Teams to monitor inflow on Jul 1.' },
+    18: { title: 'Profile & Certification Inspector Issue', type: 'Incident', date: 'Jun 30, 2026', system: 'Profile / Certification Inspector', cases: 'TBD', status: 'Under Investigation', notes: 'Issue reported with Profile and Certification Inspector tool. Under investigation as of Jun 30, 2026.' }
   };
 
   var tooltip = document.getElementById('tooltip');
